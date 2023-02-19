@@ -38,20 +38,12 @@
     bn.js "^5.1.2"
     buffer-layout "^1.2.0"
 
-"@elemfi/common@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@elemfi/common/-/common-0.1.3.tgz#45d15b2ad12006d2e29d8518ad4ec91f845cbb4d"
-  integrity sha512-G1Yrgcjxkuoq1Aoq77EAHz9IQJ4FGnYspIVlqaL3qygx7Qa20gVkicg0gcaQyoNiA3UkXgpgH7EQ+7kKZFhCSw==
-  dependencies:
-    "@solana/web3.js" "^1.73.2"
-
-"@elemfi/sdk@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@elemfi/sdk/-/sdk-0.1.3.tgz#3078f244f740344cb019a55887c8b183dc9c8c91"
-  integrity sha512-Pr9CZAucBDHNKe2jGZOGCtlnM5gUKRlqnsJf9K8BjPrU4J1l8oTIAUfYR5DCxMojMKf/BAtwBqdkkzSNDF+0vQ==
+"@elemfi/sdk@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@elemfi/sdk/-/sdk-0.1.4.tgz#018ba3f128671f295c8ff419968fc3e3717bda9f"
+  integrity sha512-81j/XBg+X/UF2W/y85/kOX0k3ss1SIsnz/+rc9FfwrAMcbVOXVa/e/BvpRCmqaX0+j2DWrCbVzkcXy0ohr4a/Q==
   dependencies:
     "@coral-xyz/anchor" "^0.26.0"
-    "@elemfi/common" "^0.1.3"
     "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
     "@solana/spl-token" "^0.3.7"
     "@solana/web3.js" "^1.73.2"
