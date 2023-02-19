@@ -1,11 +1,7 @@
-import fs from "fs";
 import { setProvider, AnchorProvider } from "@coral-xyz/anchor";
 import { Keypair } from "@solana/web3.js";
 import { ConnectedWallet, ElemFiSDK, Realm } from "@elemfi/sdk";
-
-const WALLET_KEYPAIR = Keypair.fromSecretKey(
-  new Uint8Array(JSON.parse(fs.readFileSync(process.env.ANCHOR_WALLET as string, { encoding: "utf8" })))
-);
+import { signTransaction } from "./useWallet";
 
 describe("elemfi", () => {
   const provider = AnchorProvider.env();
@@ -21,7 +17,7 @@ describe("elemfi", () => {
       escrowCollection: null,
     });
 
-    tx.sign([WALLET_KEYPAIR]);
+    signTransaction(tx);
     const signature = await provider.connection.sendTransaction(tx);
     await wallet.confirmTransaction(signature);
   });
