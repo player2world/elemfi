@@ -1,3 +1,4 @@
+import { assert } from "chai";
 import { setProvider, AnchorProvider } from "@coral-xyz/anchor";
 import { Keypair } from "@solana/web3.js";
 import { ConnectedWallet, ElemFiSDK, Realm } from "@elemfi/sdk";
@@ -20,5 +21,14 @@ describe("elemfi", () => {
     signTransaction(tx);
     const signature = await provider.connection.sendTransaction(tx);
     await wallet.confirmTransaction(signature);
+
+    const loadedRealm = await sdk.loadRealm(realm.address);
+    assert.deepEqual(loadedRealm.authority, wallet.address);
+
+    const realms = await sdk.loadRealms();
+    assert.equal(realms.length, 1);
+
+    const myRealms = await sdk.loadRealmsByAuthority(wallet.address);
+    assert.equal(myRealms.length, 1);
   });
 });
