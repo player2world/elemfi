@@ -1,0 +1,21 @@
+[features]
+seeds = false
+skip-lint = false
+[programs.localnet]
+elemfi = "E1eMFiZrCBjA2KqpTSbysK56aShTgU9TLmh4wXLmv8hS"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[workspace]
+types = "../elemfi-sdk/generated/types/"
+
+[test]
+startup_wait = 100000
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
