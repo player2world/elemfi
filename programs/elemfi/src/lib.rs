@@ -5,6 +5,9 @@ pub mod state;
 use anchor_lang::prelude::*;
 use processor::*;
 
+#[cfg(feature = "development")]
+declare_id!("5mYaD6wtPDpS4psJ7Nc69zkGeKcRaJhGrSSCX6uUaw3A");
+#[cfg(feature = "default")]
 declare_id!("E1eMFiZrCBjA2KqpTSbysK56aShTgU9TLmh4wXLmv8hS");
 
 pub mod native_token {
