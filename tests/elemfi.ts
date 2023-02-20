@@ -24,8 +24,8 @@ describe("elemfi", () => {
 
   it("should create a realm", async () => {
     const { tx, realm } = await Realm.create(sdk.program, wallet, {
-      delegator: Keypair.generate().publicKey,
-      approver: Keypair.generate().publicKey,
+      // delegator: Keypair.generate().publicKey,
+      // approver: Keypair.generate().publicKey,
       escrowCollection: null,
     });
 
