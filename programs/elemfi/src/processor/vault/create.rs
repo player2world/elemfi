@@ -8,7 +8,10 @@ use anchor_spl::token::Mint;
 pub fn process_create_vault(
     ctx: Context<CreateVault>,
     collateral_max_supply: u64,
+    collateral_min_amount: u64,
+    collateral_max_amount: u64,
     underlying_liquidity: u64,
+    escrow_collection: Option<Pubkey>,
 ) -> Result<()> {
     let underlying_token = &ctx.remaining_accounts[0];
     let token_decimals = if underlying_token.key() == NATIVE_TOKEN_ID {
@@ -25,12 +28,15 @@ pub fn process_create_vault(
         authority_bump: *ctx.bumps.get("vault_authority").unwrap(),
         token_decimals,
         collateral_token: ctx.accounts.collateral_token.key(),
-        underlying_token: underlying_token.key(),
         collateral_supply: ctx.accounts.collateral_token.supply,
         collateral_max_supply,
+        collateral_min_amount,
+        collateral_max_amount,
+        underlying_token: underlying_token.key(),
         underlying_liquidity,
         pending_obligation_amount: 0,
         pending_obligations: 0,
+        escrow_collection,
     });
     Ok(())
 }

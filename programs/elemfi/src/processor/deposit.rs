@@ -59,6 +59,14 @@ pub fn process_deposit<'a, 'b, 'c, 'info>(
     }
 
     let mint_amount = ctx.accounts.vault.calc_amount_collateral_given_underlying(amount);
+    let post_collateral_amount = ctx
+        .accounts
+        .collateral_token_account
+        .amount
+        .checked_add(mint_amount)
+        .unwrap();
+    assert!(post_collateral_amount >= ctx.accounts.vault.collateral_min_amount);
+    assert!(post_collateral_amount <= ctx.accounts.vault.collateral_max_amount);
     ctx.accounts.vault.underlying_liquidity = ctx.accounts.vault.underlying_liquidity.checked_add(amount).unwrap();
     ctx.accounts.vault.collateral_supply = ctx.accounts.vault.collateral_supply.checked_add(mint_amount).unwrap();
     assert!(ctx.accounts.vault.collateral_supply <= ctx.accounts.vault.collateral_max_supply);
@@ -100,7 +108,7 @@ pub fn process_escrow_deposit<'a, 'b, 'c, 'info>(
 
 impl<'info> Deposit<'info> {
     pub fn validate(ctx: &Context<Deposit>) -> Result<()> {
-        assert!(ctx.accounts.realm.escrow_collection.is_none());
+        assert!(ctx.accounts.vault.escrow_collection.is_none());
         Ok(())
     }
 }
@@ -109,7 +117,7 @@ impl<'info> EscrowDeposit<'info> {
     pub fn validate(ctx: &Context<EscrowDeposit>) -> Result<()> {
         assert_eq!(
             ctx.accounts.nft_metadata.collection.as_ref().unwrap().key,
-            ctx.accounts.deposit.realm.escrow_collection.unwrap()
+            ctx.accounts.deposit.vault.escrow_collection.unwrap()
         );
         assert_eq!(ctx.accounts.nft_token_account.owner, ctx.accounts.nft_owner.key());
         assert_eq!(ctx.accounts.nft_token_account.amount, 1);

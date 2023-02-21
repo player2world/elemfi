@@ -1,17 +1,11 @@
 use crate::state::*;
 use anchor_lang::prelude::*;
 
-pub fn process_create_realm(
-    ctx: Context<CreateRealm>,
-    delegator: Pubkey,
-    approver: Pubkey,
-    escrow_collection: Option<Pubkey>,
-) -> Result<()> {
+pub fn process_create_realm(ctx: Context<CreateRealm>, delegator: Pubkey, approver: Pubkey) -> Result<()> {
     ctx.accounts.realm.set_inner(Realm {
         authority: ctx.accounts.authority.key(),
         delegator,
         approver,
-        escrow_collection,
     });
 
     Ok(())

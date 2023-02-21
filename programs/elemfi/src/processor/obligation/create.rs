@@ -86,7 +86,7 @@ impl<'info> EscrowCreateObligation<'info> {
     pub fn validate(ctx: &Context<EscrowCreateObligation>) -> Result<()> {
         assert_eq!(
             ctx.accounts.nft_metadata.collection.as_ref().unwrap().key,
-            ctx.accounts.create_obligation.realm.escrow_collection.unwrap()
+            ctx.accounts.create_obligation.vault.escrow_collection.unwrap()
         );
         assert_eq!(ctx.accounts.nft_token_account.owner, ctx.accounts.nft_owner.key());
         assert_eq!(ctx.accounts.nft_token_account.amount, 1);

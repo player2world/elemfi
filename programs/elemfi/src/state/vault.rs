@@ -7,12 +7,16 @@ pub struct Vault {
     pub authority_bump: u8,
     pub token_decimals: u8,
     pub collateral_token: Pubkey,
-    pub underlying_token: Pubkey,
     pub collateral_supply: u64,
     pub collateral_max_supply: u64,
+    pub collateral_min_amount: u64,
+    pub collateral_max_amount: u64,
+    pub underlying_token: Pubkey,
     pub underlying_liquidity: u64,
     pub pending_obligation_amount: u64,
     pub pending_obligations: u32,
+    /// escrow NFT collection
+    pub escrow_collection: Option<Pubkey>,
 }
 
 impl Vault {

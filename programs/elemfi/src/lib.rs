@@ -19,22 +19,27 @@ pub mod native_token {
 pub mod elemfi {
     use super::*;
 
-    pub fn create_realm(
-        ctx: Context<CreateRealm>,
-        delegator: Pubkey,
-        approver: Pubkey,
-        escrow_collection: Option<Pubkey>,
-    ) -> Result<()> {
-        process_create_realm(ctx, delegator, approver, escrow_collection)
+    pub fn create_realm(ctx: Context<CreateRealm>, delegator: Pubkey, approver: Pubkey) -> Result<()> {
+        process_create_realm(ctx, delegator, approver)
     }
 
     #[access_control(CreateVault::validate(&ctx))]
     pub fn create_vault(
         ctx: Context<CreateVault>,
         collateral_max_supply: u64,
+        collateral_min_amount: u64,
+        collateral_max_amount: u64,
         underlying_liquidity: u64,
+        escrow_collection: Option<Pubkey>,
     ) -> Result<()> {
-        process_create_vault(ctx, collateral_max_supply, underlying_liquidity)
+        process_create_vault(
+            ctx,
+            collateral_max_supply,
+            collateral_min_amount,
+            collateral_max_amount,
+            underlying_liquidity,
+            escrow_collection,
+        )
     }
 
     pub fn create_strategy(

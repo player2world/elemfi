@@ -26,7 +26,6 @@ describe("elemfi", () => {
     const { tx, realm } = await Realm.create(sdk.program, wallet, {
       // delegator: Keypair.generate().publicKey,
       // approver: Keypair.generate().publicKey,
-      escrowCollection: null,
     });
 
     signTransaction(tx);
@@ -44,10 +43,13 @@ describe("elemfi", () => {
 
   it("should create a vault", async () => {
     const { tx, vault } = await Vault.create(realm_1, wallet, {
-      underlyingToken: underlyingToken_1,
       collateralSupply: "100",
       collateralMaxSupply: "10000000",
+      collateralMinAmount: "1",
+      collateralMaxAmount: "100",
+      underlyingToken: underlyingToken_1,
       underlyingLiquidity: "110",
+      escrowCollection: null,
     });
 
     signTransaction(tx);
@@ -56,6 +58,8 @@ describe("elemfi", () => {
     vault_1 = await sdk.loadVault(realm_1, vault.address);
     assert.equal(vault_1.collateralSupply, "100.000000000");
     assert.equal(vault_1.collateralMaxSupply, "10000000.000000000");
+    assert.equal(vault_1.collateralMinAmount, "1.000000000");
+    assert.equal(vault_1.collateralMaxAmount, "100.000000000");
     assert.equal(vault_1.underlyingLiquidity, "110.000000000");
 
     const vaults = await sdk.loadVaultsByRealm(realm_1);

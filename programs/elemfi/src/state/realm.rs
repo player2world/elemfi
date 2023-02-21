@@ -8,6 +8,4 @@ pub struct Realm {
     pub delegator: Pubkey,
     /// approver has power to add new router
     pub approver: Pubkey,
-    /// escrow NFT collection
-    pub escrow_collection: Option<Pubkey>,
 }
