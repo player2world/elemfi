@@ -50,7 +50,7 @@ pub fn process_deposit<'a, 'b, 'c, 'info>(
                 token::Transfer {
                     from: underlying_token_account.clone(),
                     to: vault_token_account.clone(),
-                    authority: ctx.accounts.underlying_owner.to_account_info(),
+                    authority: ctx.accounts.underlying_token_owner.to_account_info(),
                 },
             )
             .with_signer(signer_seeds),
@@ -92,12 +92,56 @@ pub fn process_escrow_deposit<'a, 'b, 'c, 'info>(
     ctx: Context<'_, '_, '_, 'info, EscrowDeposit<'info>>,
     amount: u64,
 ) -> Result<()> {
+    if ctx.accounts.deposit.vault.underlying_token == NATIVE_TOKEN_ID {
+        let underlying_native_account = &ctx.remaining_accounts[0];
+        assert!(underlying_native_account.lamports() >= amount);
+        let escrow_native_account = &ctx.remaining_accounts[1];
+        assert_eq!(
+            escrow_native_account.key(),
+            ctx.accounts.deposit.underlying_token_owner.key()
+        );
+        let system_program = &ctx.remaining_accounts[4];
+        assert_eq!(system_program.key(), System::id());
+        system_program::transfer(
+            CpiContext::new(
+                system_program.clone(),
+                system_program::Transfer {
+                    from: underlying_native_account.clone(),
+                    to: escrow_native_account.clone(),
+                },
+            ),
+            amount,
+        )?;
+    } else {
+        let underlying_token_account = &ctx.remaining_accounts[0];
+        assert!(token_balance(underlying_token_account)? >= amount);
+        assert_eq!(
+            token_mint(underlying_token_account)?,
+            ctx.accounts.deposit.vault.underlying_token
+        );
+        let escrow_token_account = &ctx.remaining_accounts[1];
+        assert_eq!(
+            token_account_owner(escrow_token_account)?,
+            ctx.accounts.deposit.underlying_token_owner.key()
+        );
+        token::transfer(
+            CpiContext::new(
+                ctx.accounts.deposit.token_program.to_account_info(),
+                token::Transfer {
+                    from: underlying_token_account.clone(),
+                    to: escrow_token_account.clone(),
+                    authority: ctx.accounts.nft_owner.to_account_info(),
+                },
+            ),
+            amount,
+        )?;
+    }
     ctx.accounts.escrow.authority_seeds(|authority_seeds| {
         process_deposit(
             Context::new(
                 &crate::ID,
                 &mut ctx.accounts.deposit,
-                &ctx.remaining_accounts,
+                &ctx.remaining_accounts[2..],
                 ctx.bumps.clone(),
             ),
             amount,
@@ -119,10 +163,10 @@ impl<'info> EscrowDeposit<'info> {
             ctx.accounts.nft_metadata.collection.as_ref().unwrap().key,
             ctx.accounts.deposit.vault.escrow_collection.unwrap()
         );
-        assert_eq!(ctx.accounts.nft_token_account.owner, ctx.accounts.nft_owner.key());
-        assert_eq!(ctx.accounts.nft_token_account.amount, 1);
-        assert_eq!(ctx.accounts.nft_token_account.mint, ctx.accounts.nft_metadata.mint);
-        assert_eq!(ctx.accounts.nft_token_account.mint, ctx.accounts.escrow.mint);
+        assert_eq!(ctx.accounts.nft_account.owner, ctx.accounts.nft_owner.key());
+        assert_eq!(ctx.accounts.nft_account.amount, 1);
+        assert_eq!(ctx.accounts.nft_account.mint, ctx.accounts.nft_metadata.mint);
+        assert_eq!(ctx.accounts.nft_account.mint, ctx.accounts.escrow.mint);
         Ok(())
     }
 }
@@ -139,11 +183,10 @@ pub struct Deposit<'info> {
 
     #[account(mut)]
     pub collateral_token: Account<'info, Mint>,
-
-    pub underlying_owner: Signer<'info>,
     /// CHECK: OK
-    #[account(mut, constraint = collateral_token_account.owner == underlying_owner.key())]
+    #[account(mut, constraint = collateral_token_account.owner == underlying_token_owner.key())]
     pub collateral_token_account: Account<'info, TokenAccount>,
+    pub underlying_token_owner: Signer<'info>,
 
     pub token_program: Program<'info, Token>,
 }
@@ -155,6 +198,6 @@ pub struct EscrowDeposit<'info> {
     pub escrow: Account<'info, Escrow>,
 
     pub nft_owner: Signer<'info>,
-    pub nft_token_account: Box<Account<'info, TokenAccount>>,
+    pub nft_account: Box<Account<'info, TokenAccount>>,
     pub nft_metadata: Box<Account<'info, MetadataAccount>>,
 }

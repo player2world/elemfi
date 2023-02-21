@@ -54,7 +54,7 @@ pub fn process_create_obligation(
             Burn {
                 mint: ctx.accounts.collateral_token.to_account_info(),
                 from: ctx.accounts.collateral_token_account.to_account_info(),
-                authority: ctx.accounts.collateral_owner.to_account_info(),
+                authority: ctx.accounts.collateral_token_owner.to_account_info(),
             },
         )
         .with_signer(signer_seeds),
@@ -88,10 +88,10 @@ impl<'info> EscrowCreateObligation<'info> {
             ctx.accounts.nft_metadata.collection.as_ref().unwrap().key,
             ctx.accounts.create_obligation.vault.escrow_collection.unwrap()
         );
-        assert_eq!(ctx.accounts.nft_token_account.owner, ctx.accounts.nft_owner.key());
-        assert_eq!(ctx.accounts.nft_token_account.amount, 1);
-        assert_eq!(ctx.accounts.nft_token_account.mint, ctx.accounts.nft_metadata.mint);
-        assert_eq!(ctx.accounts.nft_token_account.mint, ctx.accounts.escrow.mint);
+        assert_eq!(ctx.accounts.nft_account.owner, ctx.accounts.nft_owner.key());
+        assert_eq!(ctx.accounts.nft_account.amount, 1);
+        assert_eq!(ctx.accounts.nft_account.mint, ctx.accounts.nft_metadata.mint);
+        assert_eq!(ctx.accounts.nft_account.mint, ctx.accounts.escrow.mint);
         Ok(())
     }
 }
@@ -116,12 +116,12 @@ pub struct CreateObligation<'info> {
     )]
     pub obligation: Account<'info, Obligation>,
 
-    pub collateral_owner: Signer<'info>,
     /// CHECK: OK
     #[account(mut)]
     pub collateral_token: UncheckedAccount<'info>,
     /// CHECK: OK
     pub collateral_token_account: UncheckedAccount<'info>,
+    pub collateral_token_owner: Signer<'info>,
 
     pub token_program: Program<'info, Token>,
     #[account(mut)]
@@ -136,6 +136,6 @@ pub struct EscrowCreateObligation<'info> {
     pub escrow: Account<'info, Escrow>,
 
     pub nft_owner: Signer<'info>,
-    pub nft_token_account: Box<Account<'info, TokenAccount>>,
+    pub nft_account: Box<Account<'info, TokenAccount>>,
     pub nft_metadata: Box<Account<'info, MetadataAccount>>,
 }
