@@ -38,10 +38,10 @@
     bn.js "^5.1.2"
     buffer-layout "^1.2.0"
 
-"@elemfi/sdk@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@elemfi/sdk/-/sdk-0.1.9.tgz#0562c2dad7575079aadf6139c147e88fe1a6f364"
-  integrity sha512-M1iBe0U8iwIOP/3F9FnD3gWD/hyEimvcQiPesqu2DeIGIqxJlelsfk49wK3hJXKIjNOURC9PczHoDAP8xMqTwQ==
+"@elemfi/sdk@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@elemfi/sdk/-/sdk-0.1.12.tgz#c9ae3d702fd5462329017f62837e6d44d62fe699"
+  integrity sha512-4GXSg2DuLr1C6Jmq8OFXEz6aAYbT+WWXjZfVX597qE1TzS3a0xOoi4GAvPPvnM90shKG9wDjq5DpMi2R2Hg1eg==
   dependencies:
     "@coral-xyz/anchor" "^0.26.0"
     "@metaplex-foundation/mpl-token-metadata" "^2.8.3"

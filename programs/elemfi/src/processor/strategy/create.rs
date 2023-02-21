@@ -10,9 +10,9 @@ pub fn process_create_strategy(
     ctx.accounts.strategy.set_inner(Strategy {
         realm: ctx.accounts.realm.key(),
         vault: ctx.accounts.vault.key(),
+        authority,
         utilized_amount,
         utilization_max_amount,
-        authority,
     });
     ctx.accounts.strategy.emit_created_event();
     Ok(())

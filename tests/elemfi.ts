@@ -2,7 +2,7 @@ import { assert } from "chai";
 import { setProvider, AnchorProvider } from "@coral-xyz/anchor";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { createMint } from "@solana/spl-token";
-import { ConnectedWallet, ElemFiSDK, Realm, TokenAmountUtil, Vault } from "@elemfi/sdk";
+import { ConnectedWallet, ElemFiSDK, Realm, Strategy, TokenAmountUtil, Vault } from "@elemfi/sdk";
 import { signTransaction } from "./useWallet";
 
 describe("elemfi", () => {
@@ -60,5 +60,16 @@ describe("elemfi", () => {
 
     const vaults = await sdk.loadVaultsByRealm(realm_1);
     assert.equal(vaults.length, 1);
+  });
+
+  it("should create a strategy", async () => {
+    const { tx } = await Strategy.create(vault_1, wallet, {
+      strategyAuthority: Keypair.generate().publicKey,
+      utilizedAmount: "110",
+      utilizationMaxAmount: "1000000",
+    });
+
+    signTransaction(tx);
+    await wallet.confirmTransaction(await provider.connection.sendTransaction(tx));
   });
 });

@@ -12,7 +12,7 @@ pub struct Strategy {
 
 impl Strategy {
     pub const PREFIX: &'static [u8] = b"elemfi-strategy";
-    pub const LEN: usize = 104; // 8+32+32+32+8+8
+    pub const LEN: usize = 120; // 8+32+32+32+8+8
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
