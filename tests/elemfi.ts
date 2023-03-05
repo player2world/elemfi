@@ -91,6 +91,9 @@ describe("Elemental DeFi", () => {
     signTransaction(tx);
     await wallet.confirmTransaction(await provider.connection.sendTransaction(tx));
 
+    vault_1 = await sdk.loadVault(realm_1, vault_1.address);
+    assert.equal(vault_1.underlyingLiquidity, "210.000000");
+
     const { value: postUnderlyingBalance } = await provider.connection.getTokenAccountBalance(underlyingToken_1_wallet);
     assert.equal(postUnderlyingBalance.amount, "0");
   });
