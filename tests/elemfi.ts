@@ -87,11 +87,12 @@ describe("Elemental DeFi", () => {
 
   it("should deposit into vault", async () => {
     const tx = await vault_1.deposit(wallet, { amount: "100" });
+
     signTransaction(tx);
     await wallet.confirmTransaction(await provider.connection.sendTransaction(tx));
 
     const { value: postUnderlyingBalance } = await provider.connection.getTokenAccountBalance(underlyingToken_1_wallet);
-    assert.equal(postUnderlyingBalance.uiAmount, "0.000000");
+    assert.equal(postUnderlyingBalance.amount, "0");
   });
 
   it("should create a strategy", async () => {
