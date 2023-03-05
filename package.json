@@ -16,7 +16,7 @@
     "@coral-xyz/anchor": "^0.26.0",
     "@elemfi/sdk": "^0.2.1",
     "@solana/spl-token": "^0.3.7",
-    "@solana/web3.js": "^1.73.2"
+    "@solana/web3.js": "^1.73.3"
   },
   "scripts": {
     "lint:rs": "rustfmt programs/**/src/lib.rs",

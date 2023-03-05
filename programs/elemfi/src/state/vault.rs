@@ -26,20 +26,26 @@ impl Vault {
         if self.collateral_supply == 0 {
             amount
         } else {
-            (amount as u128)
-                .checked_mul(self.collateral_supply as u128)
-                .unwrap()
-                .checked_div(self.underlying_liquidity as u128)
-                .unwrap() as u64
+            u64::try_from(
+                (amount as u128)
+                    .checked_mul(self.collateral_supply as u128)
+                    .unwrap()
+                    .checked_div(self.underlying_liquidity as u128)
+                    .unwrap(),
+            )
+            .unwrap()
         }
     }
 
     pub fn calc_amount_underlying_given_collateral(&self, amount: u64) -> u64 {
-        (amount as u128)
-            .checked_mul(self.underlying_liquidity as u128)
-            .unwrap()
-            .checked_div(self.collateral_supply as u128)
-            .unwrap() as u64
+        u64::try_from(
+            (amount as u128)
+                .checked_mul(self.underlying_liquidity as u128)
+                .unwrap()
+                .checked_div(self.collateral_supply as u128)
+                .unwrap(),
+        )
+        .unwrap()
     }
 }
 
@@ -94,5 +100,45 @@ where
             &self.key().to_bytes(),
             &[self.as_ref().authority_bump],
         ]])
+    }
+}
+
+#[test]
+pub fn err_calc_amount_collateral_given_underlying() {
+    let amount = u64::MAX;
+    let collateral_supply = 10u64;
+    let underlying_liquidity = 5u64;
+    let amount_in_u128 = (amount as u128)
+        .checked_mul(collateral_supply as u128)
+        .unwrap()
+        .checked_div(underlying_liquidity as u128)
+        .unwrap();
+    match u64::try_from(amount_in_u128) {
+        Ok(_) => {
+            assert!(false)
+        }
+        Err(_) => {
+            assert!(true)
+        }
+    }
+}
+
+#[test]
+pub fn ok_calc_amount_collateral_given_underlying() {
+    let amount = u64::MAX;
+    let collateral_supply = 5u64;
+    let underlying_liquidity = 10u64;
+    let amount_in_u128 = (amount as u128)
+        .checked_mul(collateral_supply as u128)
+        .unwrap()
+        .checked_div(underlying_liquidity as u128)
+        .unwrap();
+    match u64::try_from(amount_in_u128) {
+        Ok(_) => {
+            assert!(true)
+        }
+        Err(_) => {
+            assert!(false)
+        }
     }
 }

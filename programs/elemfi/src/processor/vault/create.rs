@@ -3,7 +3,7 @@ use crate::{
     state::*,
 };
 use anchor_lang::prelude::*;
-use anchor_spl::token::Mint;
+use anchor_spl::token::{Mint, ID as TOKEN_PROGRAM_ID};
 
 pub fn process_create_vault(
     ctx: Context<CreateVault>,
@@ -17,6 +17,7 @@ pub fn process_create_vault(
     let token_decimals = if underlying_token.key() == NATIVE_TOKEN_ID {
         NATIVE_TOKEN_DECIMALS
     } else {
+        assert_eq!(*underlying_token.owner, TOKEN_PROGRAM_ID);
         let mut data: &[u8] = &underlying_token.try_borrow_data()?;
         let mint = Mint::try_deserialize(&mut data)?;
         mint.decimals
