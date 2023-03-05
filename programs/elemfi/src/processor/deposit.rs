@@ -65,6 +65,11 @@ pub fn process_deposit<'a, 'b, 'c, 'info>(
         .amount
         .checked_add(mint_amount)
         .unwrap();
+
+    msg!("Post Collateral Amount: {}", post_collateral_amount);
+    msg!("Collateral Min Amount: {}", ctx.accounts.vault.collateral_min_amount);
+    msg!("Collateral Max Amount: {}", ctx.accounts.vault.collateral_max_amount);
+
     assert!(post_collateral_amount >= ctx.accounts.vault.collateral_min_amount);
     assert!(post_collateral_amount <= ctx.accounts.vault.collateral_max_amount);
     ctx.accounts.vault.underlying_liquidity = ctx.accounts.vault.underlying_liquidity.checked_add(amount).unwrap();

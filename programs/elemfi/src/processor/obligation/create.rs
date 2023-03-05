@@ -8,10 +8,10 @@ use anchor_spl::{
 pub fn process_create_obligation(
     ctx: Context<CreateObligation>,
     amount: u64,
-    created_ts: i64,
+    created_ts: u32,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
-    assert!(created_ts > clock::Clock::get()?.unix_timestamp);
+    assert!(created_ts > clock::Clock::get()?.unix_timestamp as u32);
 
     let destination = &ctx.remaining_accounts[0];
     if ctx.accounts.vault.underlying_token == NATIVE_TOKEN_ID {
@@ -65,7 +65,7 @@ pub fn process_create_obligation(
 pub fn process_escrow_create_obligation<'a, 'b, 'c, 'info>(
     ctx: Context<'_, '_, '_, 'info, EscrowCreateObligation<'info>>,
     amount: u64,
-    created_ts: i64,
+    created_ts: u32,
 ) -> Result<()> {
     ctx.accounts.escrow.authority_seeds(|authority_seeds| {
         process_create_obligation(
@@ -97,7 +97,7 @@ impl<'info> EscrowCreateObligation<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(created_ts: i64)]
+#[instruction(created_ts: u32)]
 pub struct CreateObligation<'info> {
     pub realm: Account<'info, Realm>,
 

@@ -67,7 +67,7 @@ pub mod elemfi {
         process_close_obligation(ctx)
     }
 
-    pub fn create_obligation(ctx: Context<CreateObligation>, amount: u64, created_ts: i64) -> Result<()> {
+    pub fn create_obligation(ctx: Context<CreateObligation>, amount: u64, created_ts: u32) -> Result<()> {
         process_create_obligation(ctx, amount, created_ts, &[])
     }
 
@@ -84,7 +84,7 @@ pub mod elemfi {
     pub fn escrow_create_obligation<'a, 'b, 'c, 'info>(
         ctx: Context<'_, '_, '_, 'info, EscrowCreateObligation<'info>>,
         amount: u64,
-        created_ts: i64,
+        created_ts: u32,
     ) -> Result<()> {
         process_escrow_create_obligation(ctx, amount, created_ts)
     }

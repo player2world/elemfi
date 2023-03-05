@@ -9,12 +9,12 @@ pub struct Obligation {
     pub destination: Pubkey,
     pub burnt_amount: u64,
     pub pending_amount: u64,
-    pub created_ts: i64,
+    pub created_ts: u32,
 }
 
 impl Obligation {
     pub const PREFIX: &'static [u8] = b"elemfi-obligation";
-    pub const LEN: usize = 160; // 8+32+32+32+32+8+8+8
+    pub const LEN: usize = 156; // 8+32+32+32+32+8+8+4
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -25,7 +25,7 @@ pub struct ObligationCreatedData {
     pub destination: Pubkey,
     pub burnt_amount: u64,
     pub pending_amount: u64,
-    pub created_ts: i64,
+    pub created_ts: u32,
 }
 
 #[event]
