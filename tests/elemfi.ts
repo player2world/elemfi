@@ -98,6 +98,19 @@ describe("Elemental DeFi", () => {
     assert.equal(postUnderlyingBalance.amount, "0");
   });
 
+  it("should create obligation for vault", async () => {
+    const { tx, obligation } = await Obligation.create(vault_1, wallet, { amount: "100" });
+
+    signTransaction(tx);
+    await wallet.confirmTransaction(await provider.connection.sendTransaction(tx));
+
+    vault_1 = await sdk.loadVault(realm_1, vault_1.address);
+    assert.equal(vault_1.underlyingLiquidity, "100.000000");
+
+    const { value: postUnderlyingBalance } = await provider.connection.getTokenAccountBalance(underlyingToken_1_wallet);
+    assert.equal(postUnderlyingBalance.amount, "110.00000");
+  });
+
   it("should create a strategy", async () => {
     const { tx } = await Strategy.create(vault_1, wallet, {
       strategyAuthority: Keypair.generate().publicKey,

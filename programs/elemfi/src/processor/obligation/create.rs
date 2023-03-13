@@ -11,7 +11,7 @@ pub fn process_create_obligation(
     created_ts: u32,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
-    assert!(created_ts > clock::Clock::get()?.unix_timestamp as u32);
+    assert!(created_ts < clock::Clock::get()?.unix_timestamp as u32);
 
     let destination = &ctx.remaining_accounts[0];
     if ctx.accounts.vault.underlying_token == NATIVE_TOKEN_ID {
@@ -97,7 +97,7 @@ impl<'info> EscrowCreateObligation<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(created_ts: u32)]
+#[instruction(amount: u64, created_ts: u32)]
 pub struct CreateObligation<'info> {
     pub realm: Account<'info, Realm>,
 
@@ -120,6 +120,7 @@ pub struct CreateObligation<'info> {
     #[account(mut)]
     pub collateral_token: UncheckedAccount<'info>,
     /// CHECK: OK
+    #[account(mut)]
     pub collateral_token_account: UncheckedAccount<'info>,
     pub collateral_token_owner: Signer<'info>,
 
