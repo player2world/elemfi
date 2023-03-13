@@ -51,7 +51,6 @@ pub fn process_close_obligation<'a, 'b, 'c, 'info>(
 }
 
 #[derive(Accounts)]
-#[instruction(created_ts: i64)]
 pub struct CloseObligation<'info> {
     #[account(has_one = authority)]
     pub realm: Account<'info, Realm>,
